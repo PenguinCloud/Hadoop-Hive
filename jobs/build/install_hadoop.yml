@@ -1,0 +1,91 @@
+---
+- name: "Set environment exports {{run.user}}"
+  ansible.builtin.blockinfile:
+    path: "/home/{{ run.user }}/.bashrc"
+    block: |
+      export HIVE_HOME=/opt/hive   
+      export PATH=$PATH:/opt/hive/bin
+      export HADOOP_HOME=/opt/hadoop
+      export PATH=$PATH:$HADOOP_HOME/bin
+      export PATH=$PATH:$HADOOP_HOME/sbin
+      export HADOOP_MAPRED_HOME=${HADOOP_HOME}
+      export HADOOP_COMMON_HOME=${HADOOP_HOME}
+      export HADOOP_HDFS_HOME=${HADOOP_HOME}
+      export YARN_HOME=${HADOOP_HOME}
+      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+- name: Set environment exports for root
+  ansible.builtin.blockinfile:
+    path: "/root/.bashrc"
+    block: |
+      export HIVE_HOME=/opt/hive   
+      export PATH=$PATH:/opt/hive/bin
+      export HADOOP_HOME=/opt/hadoop
+      export PATH=$PATH:$HADOOP_HOME/bin
+      export PATH=$PATH:$HADOOP_HOME/sbin
+      export HADOOP_MAPRED_HOME=${HADOOP_HOME}
+      export HADOOP_COMMON_HOME=${HADOOP_HOME}
+      export HADOOP_HDFS_HOME=${HADOOP_HOME}
+      export YARN_HOME=${HADOOP_HOME}
+      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+- name: Source it
+  shell:
+    cmd: "source ~/.bashrc"
+
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+  loop:
+    - /opt/hadoop
+    - /opt/hive
+
+- name: download hadoop
+  ansible.builtin.get_url:
+    url: "{{ hadoop.link }}"
+    dest: /opt/
+
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: "/opt/{{ hadoop.arc_version }}"
+    dest: /opt/
+    remote_src: yes
+
+- name: Remove file (delete file)
+  ansible.builtin.file:
+    path: "/opt/{{ hadoop.arc_version }}"
+    state: absent
+
+- name: Rename Hadoop
+  shell: 
+    cmd: "mv /opt/{{ hadoop.version }}/* /opt/hadoop/"
+
+- name: create hadoop log directory
+  file:
+    path: /opt/hadoop/logs/
+    state: directory
+
+- name: Recursively remove downloaded directory
+  ansible.builtin.file:
+    path: /opt/{{ hadoop.version }}/
+    state: absent
+
+- name: create hdfs namenode directory
+  file:
+    path: /opt/hadoop/hdfs/namenode
+    state: directory
+
+- name: create hdfs datanode directory
+  file:
+    path: /opt/hadoop/hdfs/datanode
+    state: directory
+
+- name: Update hadoop start
+  ansible.builtin.lineinfile:
+    line: "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64"
+    regex: "JAVA_HOME"
+    path: /opt/hadoop/etc/hadoop/hadoop-env.sh
+

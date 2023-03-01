@@ -1,0 +1,24 @@
+---
+- name: Install dependencies
+  include_tasks:
+    file: install_dependencies.yml
+
+- name: Install SSH
+  include_tasks:
+    file: ssh.yml
+
+- name: Install Hadoop
+  include_tasks:
+    file: install_hadoop.yml
+
+#- name: Install JavaX
+#  include_tasks:
+#    file: install_javax.yml
+
+- name: Grant Perms Hadoop
+  include_tasks:
+    file: permissions_hadoop.yml
+
+#- name: Change SSH port
+#  include_tasks:
+#    file: config_port.yml

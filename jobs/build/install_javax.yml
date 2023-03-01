@@ -1,0 +1,11 @@
+---
+- name: Create hadoop lib folder
+  file:
+    path: /opt/hadoop/lib/
+    state: directory
+
+- name: download javax
+  ansible.builtin.get_url:
+    url: "{{ javax.j_link }}"
+    dest: /opt/hadoop/lib/
+

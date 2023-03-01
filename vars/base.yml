@@ -1,0 +1,13 @@
+run:
+  user: ptg-user
+app:
+  title: "{{ lookup('ansible.builtin.env', 'APP_TILE') }}"
+
+hadoop:
+  link: "{{ lookup('ansible.builtin.env', 'HADOOP_LINK') }}"
+  version: "{{ lookup('ansible.builtin.env', 'HADOOP_VERSION') }}"
+  arc_version: "{{ lookup('ansible.builtin.env', 'HADOOP_ARC_VERSION') }}"
+
+javax:
+  j_link: "{{ lookup('ansible.builtin.env', 'JAVAX_LINK') }}"
+  j_jar: "{{ lookup('ansible.builtin.env', 'JAVAX_JAR') }}"

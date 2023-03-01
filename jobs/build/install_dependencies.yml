@@ -1,0 +1,28 @@
+---
+- name: Install The Default Java JRE and JDK
+  ansible.builtin.apt:
+     pkg:
+       - openjdk-8-jre
+       - openjdk-8-jdk-headless
+       - default-jre
+       - default-jdk
+       - openssh-server #Added by KP, the client is installed, but the sshd server by default
+       - openssh-client
+     state: present
+     update_cache: yes
+
+- name: Install additional pip packages
+  ansible.builtin.pip:
+    name: cryptography
+
+#- name: Install Firewalld and Python Firewall
+#  ansible.builtin.apt:
+#     pkg:
+#       - firewalld
+#       - python3-firewall
+#     state: present
+#     update_cache: yes
+
+
+
+

@@ -1,0 +1,20 @@
+---
+version: "2.4"
+services:
+  hadoop:
+    image: penguintech/hive
+    build: .
+    ports:
+      - "10000:10000"
+      - "2222:22"
+    networks:
+      - hive
+    healthcheck:
+      test: ["CMD", "ansible-playbook", "entrypoint.yml", "--tag", "test"]
+      interval: 5m
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+networks:
+  hive:

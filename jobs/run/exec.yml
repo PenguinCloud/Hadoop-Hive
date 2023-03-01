@@ -1,0 +1,26 @@
+---
+#- name: Activate the environment variables
+#  shell:
+#    cmd: source ~/.bashrc
+
+#- name: Start SSHD # Added by KP - Not sure if the SSH server is runnning? https://dev.to/s1ntaxe770r/#how-to-setup-ssh-within-a-docker-container-i5i
+#  ansible.builtin.shell:
+#    cmd: nohup /usr/sbin/sshd &
+
+
+# KP Note Here - This should be in test
+#- name: Verify if the password-less SSH is functional
+#  ansible.builtin.shell:
+#    cmd: ssh  ptg-user@hadoop
+
+- name: Validate the Hadoop configuration
+  shell:
+    cmd: /opt/hadoop/bin/hdfs namenode -format
+
+- name: Run the datanode and namenode script
+  shell:
+    cmd: /opt/hadoop/sbin/start-dfs.sh
+
+- name: Run the Yarn resource manager
+  shell:
+    cmd: /opt/hadoop/sbin/start-yarn.sh

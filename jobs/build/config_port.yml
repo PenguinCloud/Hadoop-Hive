@@ -1,0 +1,16 @@
+---
+- name: Change the default SSH port - sshd
+  ansible.builtin.lineinfile:
+    path: /etc/sshd/sshd_config
+    regexp: '^PermitTunnel no'
+    insertafter: '^PermitTunnel no '
+    line: Port 2222
+
+- name: Change the default SSH port
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/ssh_config
+    regexp: '^GSSAPIAuthentication yes'
+    insertafter: '^GSSAPIAuthentication yes'
+    line: Port 2222
+    # owner: root
+    # group: root

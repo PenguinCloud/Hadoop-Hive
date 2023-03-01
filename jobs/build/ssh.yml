@@ -1,0 +1,15 @@
+---
+
+- name: Generate SSH Key
+  community.crypto.openssh_keypair:
+    type: ecdsa
+    path: "/home/{{ run.user }}/.ssh/id_ssh_ecdsa"
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+  register: sshresults
+
+- name: Add pubkey to authorized
+  ansible.builtin.lineinfile:
+    path: "/home/{{ run.user }}/.ssh/authorized_keys"
+    line: "{{ sshresults.public_key }}"
+    create: yes
